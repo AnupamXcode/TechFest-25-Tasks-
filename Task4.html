@@ -1,1 +1,469 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Task 4 —  CSS-only Hero with Illustration</title>
+  <style>
+    :root{
+      --space-1: 0.5rem;
+      --space-2: 1rem;
+      --space-3: 1.5rem;
+      --radius: 14px;
+      --bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --card: rgba(255,255,255,0.05);
+      --muted: rgba(255,255,255,0.75);
+      --accent-1: 271 91% 65%; /* Purple */
+      --accent-2: 201 96% 60%; /* Blue */
+      --accent-3: 339 90% 61%; /* Pink */
+      --glass: rgba(255,255,255,0.08);
+      --max-width: 1200px;
+      --easing: cubic-bezier(0.16, 1, 0.3, 1);
+      --transition: all 0.4s var(--easing);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; 
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color: #f1f5f9; 
+      -webkit-font-smoothing:antialiased; 
+      -moz-osx-font-smoothing:grayscale;
+      padding: calc(var(--space-3)*1.5);
+      display:flex; 
+      align-items:center; 
+      justify-content:center;
+      line-height: 1.6;
+    }
 
+    .container{
+      width:100%; 
+      max-width:var(--max-width);
+      background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border-radius: calc(var(--radius) + 8px);
+      padding: calc(var(--space-3) * 1.5);
+      box-shadow: 0 20px 40px rgba(2,6,23,0.5), 0 0 0 1px rgba(255,255,255,0.03);
+      overflow:hidden;
+      position: relative;
+    }
+    .container::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        radial-gradient(circle at 15% 50%, rgba(139, 92, 246, 0.08), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(14, 165, 233, 0.08), transparent 25%),
+        radial-gradient(circle at 50% 80%, rgba(236, 72, 153, 0.08), transparent 25%);
+      pointer-events: none;
+      z-index: -1;
+      animation: rotateBackground 30s linear infinite;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: calc(var(--space-3) * 2);
+      align-items:center;
+      min-height: 480px;
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width: 900px){
+      .hero-grid{
+        grid-template-columns: 1fr; 
+        grid-auto-rows: auto;
+        gap: var(--space-3);
+      }
+    }
+    .copy{
+      padding: calc(var(--space-2) * 1.5);
+    }
+    .kicker{
+      font-size:0.9rem; 
+      font-weight: 600;
+      color: hsl(var(--accent-2)); 
+      letter-spacing:0.1em; 
+      text-transform:uppercase; 
+      margin-bottom:var(--space-2);
+      display: inline-block;
+      padding: 0.35rem 0.8rem;
+      background: rgba(255,255,255,0.05);
+      border-radius: 100px;
+      backdrop-filter: blur(10px);
+    }
+    h1{
+      margin:0 0 var(--space-2) 0; 
+      font-size:clamp(2rem, 4.5vw, 3.2rem); 
+      line-height:1.1;
+      font-weight: 800;
+      background: linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)), hsl(var(--accent-3)));
+      -webkit-background-clip:text; 
+      background-clip:text; 
+      color:transparent;
+      letter-spacing: -0.025em;
+    }
+    p.lead{
+      margin:0 0 var(--space-3); 
+      color:rgba(241,245,249,0.85); 
+      max-width:60ch;
+      font-size: 1.1rem;
+    }
+    .cta-row{
+      display:flex; 
+      gap:var(--space-2); 
+      align-items:center; 
+      margin-top:calc(var(--space-3));
+      flex-wrap: wrap;
+    }
+    .btn{
+      padding: 0.8rem 1.6rem; 
+      border-radius:12px; 
+      border:0; 
+      cursor:pointer; 
+      font-weight:600;
+      font-size: 1rem;
+      background: linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-2)));
+      color: white; 
+      box-shadow: 0 6px 20px rgba(123, 97, 255, 0.3);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: 0.5s;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(123, 97, 255, 0.4);
+    }
+    .btn:hover::before {
+      left: 100%;
+    }
+    .ghost{
+      background:rgba(255,255,255,0.03); 
+      border:1px solid rgba(255,255,255,0.08); 
+      color:var(--muted); 
+      padding:0.75rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 500;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+    }
+    .ghost:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.12);
+      transform: translateY(-2px);
+    }
+    .art-wrap{
+      display:grid; 
+      place-items:center; 
+      position:relative; 
+      padding: clamp(1rem, 2vw, 2rem);
+    }
+
+    .card-3d{
+      width:100%; 
+      max-width:520px; 
+      aspect-ratio: 4/3; 
+      border-radius:24px; 
+      position:relative; 
+      overflow:visible;
+      background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.06);
+      box-shadow: 
+        0 20px 50px rgba(2,6,23,0.7), 
+        0 8px 24px rgba(2,6,23,0.5) inset,
+        0 0 0 1px rgba(255,255,255,0.03);
+      display:flex; 
+      align-items:center; 
+      justify-content:center;
+      transform-style:preserve-3d;
+      transition: var(--transition);
+    }
+    .card-3d:hover {
+      transform: translateY(-5px) rotate3d(0.5, 1, 0, 2deg);
+      box-shadow: 
+        0 25px 60px rgba(2,6,23,0.8), 
+        0 8px 24px rgba(2,6,23,0.5) inset,
+        0 0 0 1px rgba(255,255,255,0.05);
+    }
+
+    /* Pure-CSS decorative shapes using pseudo elements */
+    .card-3d::before,
+    .card-3d::after{
+      content:""; 
+      position:absolute; 
+      border-radius:999px; 
+      filter:blur(32px); 
+      opacity:0.7; 
+      transform:translateZ(-20px);
+      z-index: -1;
+    }
+    .card-3d::before{ 
+      width:300px; 
+      height:300px; 
+      right:-50px; 
+      top:-40px; 
+      background:radial-gradient(circle at 30% 30%, rgba(139, 92, 246, 0.5), transparent 50%); 
+      animation:floatSway 10s var(--easing) infinite;
+    }
+    .card-3d::after{ 
+      width:240px; 
+      height:240px; 
+      left:-60px; 
+      bottom:-50px; 
+      background:conic-gradient(from 180deg at 50% 50%, rgba(14, 165, 233, 0.4), transparent 40%); 
+      animation:floatSway 12s calc(var(--easing) * 0.5) infinite reverse;
+    }
+
+    /* Inline SVG scales inside */
+    .scene{ 
+      width:92%; 
+      height:86%; 
+      display:block; 
+    }
+
+    /* Little floating items layered over the SVG (CSS shapes) */
+    .float-dot{
+      position:absolute; 
+      width:14px; 
+      height:14px; 
+      border-radius:50%; 
+      background:linear-gradient(135deg, hsl(var(--accent-1)), hsl(var(--accent-3))); 
+      box-shadow: 0 8px 20px rgba(2,6,23,0.6);
+      transform:translateZ(40px); 
+      animation:floatUp 6s var(--easing) infinite;
+      z-index: 2;
+    }
+    .dot-a{ 
+      right:80px; 
+      top:30px; 
+      animation-delay:0s;
+      width: 16px;
+      height: 16px;
+    }
+    .dot-b{ 
+      left:50px; 
+      bottom:70px; 
+      width:20px; 
+      height:20px; 
+      animation-duration:7s; 
+      animation-delay:1s;
+      background: linear-gradient(135deg, hsl(var(--accent-2)), hsl(var(--accent-1)));
+    }
+    .dot-c {
+      right: 120px;
+      bottom: 40px;
+      width: 12px;
+      height: 12px;
+      animation-duration: 5s;
+      animation-delay: 1.5s;
+      background: linear-gradient(135deg, hsl(var(--accent-3)), hsl(var(--accent-2)));
+    }
+
+    /* ========== KEYFRAMES ========== */
+    @keyframes floatSway{
+      0%{ transform: translateY(0) rotate(0deg) scale(1); }
+      33%{ transform: translateY(-15px) rotate(4deg) scale(1.05); }
+      66%{ transform: translateY(8px) rotate(-3deg) scale(0.98); }
+      100%{ transform: translateY(0) rotate(0deg) scale(1); }
+    }
+    @keyframes floatUp{
+      0%{ transform: translateY(8px) translateX(0) scale(1) rotate(0deg); }
+      33%{ transform: translateY(-12px) translateX(8px) scale(1.08) rotate(10deg); }
+      66%{ transform: translateY(4px) translateX(-6px) scale(0.95) rotate(-5deg); }
+      100%{ transform: translateY(8px) translateX(0) scale(1) rotate(0deg); }
+    }
+    @keyframes rotateBackground {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* subtle gradient shift for the main accent */
+    @keyframes accentShift{
+      0%{ filter: hue-rotate(0deg) brightness(1); }
+      50%{ filter: hue-rotate(15deg) brightness(1.1); }
+      100%{ filter: hue-rotate(0deg) brightness(1); }
+    }
+
+    .accent-glow{ 
+      position:absolute; 
+      inset:0; 
+      pointer-events:none; 
+      mix-blend-mode:screen; 
+      animation:accentShift 12s var(--easing) infinite;
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    /* Accessibility: reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      *, .card-3d::before, .card-3d::after, .float-dot {
+        animation:none!important; 
+        transition:none!important;
+      }
+      .card-3d:hover {
+        transform: none;
+      }
+    }
+
+    /* Small polish */
+    footer{ 
+      text-align:center; 
+      color:rgba(241,245,249,0.6); 
+      font-size:0.85rem; 
+      margin-top:calc(var(--space-3));
+      padding-top: var(--space-2);
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 600px) {
+      body {
+        padding: var(--space-2);
+      }
+      .container {
+        padding: var(--space-3);
+      }
+      .hero-grid {
+        min-height: auto;
+      }
+      .cta-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .btn, .ghost {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <main class="hero-grid" role="region" aria-label="Hero — Advanced CSS Illustration">
+      <section class="copy">
+        <div class="kicker">Design craft • CSS illustration</div>
+        <h1>Elevate Your UI with Pure CSS Artistry</h1>
+        <p class="lead"> Hi, I'm Anupam Shrivastava — passionate about coding, design, and tech innovation.  
+  Currently, I’m contributing as a College Ambassador for **Techfest IIT Bombay**, 
+  engaging students with creativity and technology.</p>
+        <div class="cta-row">
+          <button class="btn">View repository </button>
+          <button class="ghost">Inspect code</button>
+        </div>
+      </section>
+
+      <aside class="art-wrap" aria-hidden="true">
+        <div class="card-3d">
+
+          <!-- Accent glow layer (filters hue rotate) -->
+          <div class="accent-glow" aria-hidden="true">
+            <svg class="scene" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice" role="img" focusable="false">
+              <defs>
+                <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.9"/>
+                  <stop offset="50%" stop-color="#0EA5E9" stop-opacity="0.9"/>
+                  <stop offset="100%" stop-color="#EC4899" stop-opacity="0.9"/>
+                </linearGradient>
+
+                <radialGradient id="sun" cx="30%" cy="20%" r="60%">
+                  <stop offset="0%" stop-color="#FEF08A" stop-opacity="0.95"/>
+                  <stop offset="100%" stop-color="#FB923C" stop-opacity="0.15"/>
+                </radialGradient>
+
+                <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur stdDeviation="20" result="blur" />
+                  <feBlend in="SourceGraphic" in2="blur" mode="screen" />
+                </filter>
+                
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                </pattern>
+              </defs>
+
+              <!-- Background with subtle grid -->
+              <rect x="0" y="0" width="800" height="600" rx="20" fill="url(#g1)" opacity="0.15" />
+              <rect x="0" y="0" width="800" height="600" rx="20" fill="url(#grid)" opacity="0.3" />
+
+              <!-- Ground / platform -->
+              <path d="M40 430 q200 40 720 0 v120 h-800 z" fill="rgba(15,23,42,0.7)" />
+
+              <!-- Floating device — uses shapes only -->
+              <g transform="translate(120,120) scale(0.9)">
+                <!-- body -->
+                <rect x="200" y="120" rx="20" ry="20" width="260" height="140" fill="#0F172A" stroke="rgba(255,255,255,0.06)" stroke-width="1" />
+
+                <!-- screen gradient -->
+                <rect x="220" y="140" rx="12" width="220" height="100" fill="url(#g1)" opacity="0.95" />
+
+                <!-- inner subtle highlight -->
+                <rect x="230" y="150" rx="8" width="200" height="80" fill="rgba(255,255,255,0.06)" />
+
+                <!-- knobs and ports built from circles/rects -->
+                <circle cx="230" cy="240" r="7" fill="#FED7AA" opacity="0.9" />
+                <circle cx="304" cy="240" r="7" fill="#BBF7D0" opacity="0.85" />
+                <rect x="372" y="238" width="48" height="10" rx="5" fill="#fff" opacity="0.08" />
+
+                <!-- small floating window inside the screen -->
+                <rect x="245" y="160" rx="8" width="70" height="40" fill="rgba(255,255,255,0.1)" />
+                <rect x="325" y="160" rx="8" width="80" height="40" fill="rgba(255,255,255,0.04)" />
+                
+                <!-- decorative elements on screen -->
+                <circle cx="265" y="180" r="3" fill="#fff" opacity="0.8" />
+                <circle cx="265" y="195" r="3" fill="#fff" opacity="0.6" />
+                <rect x="335" y="170" width="40" height="6" rx="3" fill="#fff" opacity="0.7" />
+                <rect x="335" y="182" width="30" height="6" rx="3" fill="#fff" opacity="0.5" />
+
+                <!-- decorative dotted orbit -- SVG stroke-dasharray animation -->
+                <g id="orbit" stroke="rgba(255,255,255,0.08)" stroke-width="2" fill="none">
+                  <path d="M300 180 c60 -44 140 -44 200 0" stroke-linecap="round" stroke-dasharray="6 8">
+                    <animate attributeName="stroke-dashoffset" values="0;40;0" dur="9s" repeatCount="indefinite" />
+                  </path>
+                </g>
+
+                <!-- shadow under device -->
+                <ellipse cx="330" cy="290" rx="90" ry="20" fill="black" opacity="0.2" filter="url(#soft)" />
+
+              </g>
+
+              <!-- Decorative sun-ish gradient -->
+              <circle cx="660" cy="90" r="70" fill="url(#sun)" opacity="0.9" filter="url(#soft)" />
+
+              <!-- tiny stars/dots (decorative) -->
+              <g fill="#fff" opacity="0.9">
+                <circle cx="60" cy="70" r="2.5" />
+                <circle cx="140" cy="40" r="2" />
+                <circle cx="720" cy="160" r="2.2" />
+                <circle cx="520" cy="40" r="1.8" />
+                <circle cx="380" cy="60" r="1.5" />
+                <circle cx="180" cy="100" r="2" />
+              </g>
+
+            </svg>
+          </div>
+
+          <!-- CSS floating dots on top of the card for parallax -->
+          <div class="float-dot dot-a" aria-hidden="true"></div>
+          <div class="float-dot dot-b" aria-hidden="true"></div>
+          <div class="float-dot dot-c" aria-hidden="true"></div>
+
+        </div>
+      </aside>
+    </main>
+
+    <footer>TechFest (IIT Bombay) Task 4 — CSS Layout & Micro-Illustration <br>
+        • CSS variables • Grid • Inline SVG • Keyframes</footer>
+  </div>
+</body>
+</html>
